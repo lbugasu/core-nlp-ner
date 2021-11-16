@@ -1,5 +1,5 @@
 {
-    "name": "ner-promise",
+    "name": "core-nlp-ner",
     "version": "0.0.0",
     "license": "ISC",
     "main": "index.js",
@@ -31,7 +31,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "prepare": "husky install",
         "commit": "cz",
-        "release": "standard-version"
+        "release": "standard-version",
+        "build": "tsc"
     },
     "devDependencies": {
         "@commitlint/cli": "^14.1.0",

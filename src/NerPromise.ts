@@ -10,21 +10,14 @@ export interface NEROptions {
     classifier?: string
 }
 
-class EntityRecognizerError extends Error {
-    message: string = ''
-    constructor(message: string) {
-        super(message)
-        this.message = message
-    }
-}
-
 interface EntityGroup {
     [key: string]: string[]
 }
 
 class EntityRecognizer {
     options: NEROptions
-
+    jarFilePath: string
+    classifiersPath: string
     constructor(options: NEROptions) {
         this.options = Object.assign(
             {
@@ -34,55 +27,71 @@ class EntityRecognizer {
             },
             options,
         )
+        this.jarFilePath = path.normalize(
+            this.options.installPath + '/' + this.options.jar,
+        )
+        this.classifiersPath = path.normalize(
+            this.options.installPath +
+                '/classifiers/' +
+                this.options.classifier,
+        )
     }
 
-    //modified to use promises and allow data from stdin (stream)
-    async process(text: string) {
+    async processAsync(text: string) {
         if (this.options.installPath === '')
-            throw new EntityRecognizerError(
-                'Please specify the install path to Stanford NER.',
-            )
-
+            throw new Error('Please specify the install path to Stanford NER.')
         return new Promise<EntityGroup>((resolve, reject) => {
-            try {
-                let self = this
-                text = text.replace(/\n/g, ' ')
-                let proc = execFile(
-                    'java',
-                    [
-                        '-mx1500m',
-                        '-cp',
-                        path.normalize(
-                            this.options.installPath + '/' + this.options.jar,
-                        ),
-                        'edu.stanford.nlp.ie.crf.CRFClassifier',
-                        '-loadClassifier',
-                        path.normalize(
-                            this.options.installPath +
-                                '/classifiers/' +
-                                this.options.classifier,
-                        ),
-                        '-readStdin',
-                    ],
-                    function (err: any, stdout, stderr) {
-                        if (err) {
-                            reject(err)
-                            throw new Error(err)
-                        }
-                        resolve(self.parse(stdout))
-                    },
-                )
-
-                var stdinStream = new stream.Readable()
-                stdinStream.push(text)
-                stdinStream.push(null)
-                if (proc.stdin) stdinStream.pipe(proc.stdin)
-            } catch (err) {
-                console.error(`Error: ${err}`)
-                reject(err)
-            }
+            this.getNamedEntityGroups(text, true, resolve, reject)
         })
     }
+
+    getNamedEntityGroups(
+        text: string,
+        async: boolean,
+        resolve?: Function,
+        reject?: Function,
+    ) {
+        try {
+            const jarFilePath = path.normalize(
+                this.options.installPath + '/' + this.options.jar,
+            )
+            text = text.replace(/\n/g, ' ')
+            let proc = execFile(
+                'java',
+                [
+                    '-mx1500m',
+                    '-cp',
+                    jarFilePath,
+                    'edu.stanford.nlp.ie.crf.CRFClassifier',
+                    '-loadClassifier',
+                    path.normalize(
+                        this.options.installPath +
+                            '/classifiers/' +
+                            this.options.classifier,
+                    ),
+                    '-readStdin',
+                ],
+                (err: any, stdout, stderr) => {
+                    console.log(stdout)
+                    if (err) {
+                        if (async) reject(err)
+                        throw new Error(err.message)
+                    }
+                    if (async) resolve(this.parse(stdout))
+                    else return this.parse(stdout)
+                },
+            )
+
+            //modified to use promises and allow data from stdin (stream)
+            var stdinStream = new stream.Readable()
+            stdinStream.push(text)
+            stdinStream.push(null)
+            if (proc.stdin) stdinStream.pipe(proc.stdin)
+        } catch (err) {
+            console.error(`Error: ${err}`)
+        }
+    }
+
     //code below is by original dev.
     parse(parsed: string) {
         const tokenized = parsed.split(/\s/gim)
@@ -141,6 +150,7 @@ class EntityRecognizer {
             // Save the current entity
             prevEntity = tagged[i]?.t
         }
+        console.log(entities)
         return entities
     }
 }
