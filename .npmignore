@@ -7,3 +7,12 @@ yarn-error.log
 src/**
 coverage/
 .dependabot/
+.prettierrc
+.eslintrc
+docs
+.husky
+scripts
+yarn.lock
+.gitignore
+commitlint.config.js
+tmp
