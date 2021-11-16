@@ -1,60 +1,50 @@
 {
-  "_from": "ner-promise",
-  "_id": "ner-promise@1.0.0",
-  "_inBundle": false,
-  "_integrity": "sha512-7v0Lph+y3cf90f1JqII7BmW8xLdPDn4eleehMeJemxu3vsxvxmplYD6Kjw+ysnWs/e7ojARDSek0adPqaXaQvw==",
-  "_location": "/ner-promise",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "ner-promise",
     "name": "ner-promise",
-    "escapedName": "ner-promise",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/ner-promise/-/ner-promise-1.0.0.tgz",
-  "_shasum": "a484f935937295a838f75e6767a5f4fa20909da7",
-  "_spec": "ner-promise",
-  "_where": "/home/tom/dv/temp",
-  "author": {
-    "name": "Tom Tahmassian"
-  },
-  "bugs": {
-    "url": "https://github.com/~tahmas/ner-promise/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {
-    "lodash.assign": "^4.2.0",
-    "lodash.compact": "^3.0.1",
-    "lodash.map": "^4.6.0"
-  },
-  "deprecated": false,
-  "description": "A node wrapper for Stanford Named Entity Recognition, using promises.",
-  "homepage": "https://github.com/~tahmas/ner-promise#readme",
-  "keywords": [
-    "stanford",
-    "ner",
-    "named",
-    "entity",
-    "recognition",
-    "promise-based"
-  ],
-  "license": "ISC",
-  "main": "index.js",
-  "name": "ner-promise",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/~tahmas/ner-promise.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "version": "1.0.0"
+    "version": "0.0.0",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lbugasu/core-nlp-ner.git"
+    },
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/lbugasu/core-nlp-ner/issues"
+    },
+    "bundleDependencies": false,
+    "dependencies": {
+        "lodash.assign": "^4.2.0",
+        "lodash.compact": "^3.0.1",
+        "lodash.map": "^4.6.0"
+    },
+    "deprecated": false,
+    "description": "A node wrapper for Stanford Named Entity Recognition, using promises.",
+    "homepage": "https://github.com/lbugasu/core-nlp-ner#readme",
+    "keywords": [
+        "stanford",
+        "ner",
+        "named",
+        "entity",
+        "recognition",
+        "promise-based"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky install",
+        "commit": "cz",
+        "release": "standard-version"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^14.1.0",
+        "@commitlint/config-conventional": "^14.1.0",
+        "commitizen": "^4.2.4",
+        "husky": "^7.0.4",
+        "prettier": "^2.4.1",
+        "pretty-quick": "^3.1.1",
+        "standard-version": "^9.3.2"
+    },
+    "husky": {
+        "hooks": {
+            "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+        }
+    }
 }
