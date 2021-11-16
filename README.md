@@ -1,9 +1,10 @@
 # ner-promise
+
 A node.js wrapper for Stanford Named Entity Recognition, using promises.
 
 ner-promises takes text as input and uses Stanford's NER (Java-based) to tag named entities in the text.
 
-This is an adaption of https://github.com/26medias/node-ner using promises.  Another important distinction is that this package takes its input from a variable, rather than needing to read a file.
+This is an adaption of https://github.com/26medias/node-ner using promises. Another important distinction is that this package takes its input from a variable, rather than needing to read a file.
 
 ## Installation:
 
@@ -31,7 +32,7 @@ npm install ner-promise
 const ner = require('ner-promise');
 
 const nerPromise = new ner({
-	install_path: '/path/to/stanford-ner'  
+	install_path: '/path/to/stanford-ner'
 });
 
 const text = `Bob Moog (1934-2005) was an innovator in the world of electronic music for more than 50 years, expanding the boundaries of sonic expression and affecting the lives of musicians and music lovers around the globe. His invention of the Moog synthesizer in 1964 (in collaboration with Herb Deutsch) revolutionized almost every genre of music, offering performers new sonic possibilities in which to express their creativity. For many musicians, the synthesizer transformed their lives and work.  Bob's impact and the legacy are ongoing.`;

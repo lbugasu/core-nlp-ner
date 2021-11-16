@@ -1,4 +1,4 @@
-import _map from 'lodash.map'
+import map from 'lodash.map'
 import _compact from 'lodash.compact'
 import path from 'path'
 import stream from 'stream'
@@ -16,6 +16,10 @@ class EntityRecognizerError extends Error {
         super(message)
         this.message = message
     }
+}
+
+interface EntityGroup {
+    [key: string]: string[]
 }
 
 class EntityRecognizer {
@@ -39,7 +43,7 @@ class EntityRecognizer {
                 'Please specify the install path to Stanford NER.',
             )
 
-        return new Promise((resolve, reject) => {
+        return new Promise<EntityGroup>((resolve, reject) => {
             try {
                 let self = this
                 text = text.replace(/\n/g, ' ')
@@ -81,10 +85,10 @@ class EntityRecognizer {
     }
     //code below is by original dev.
     parse(parsed: string) {
-        var tokenized = parsed.split(/\s/gim)
+        const tokenized = parsed.split(/\s/gim)
 
-        var tagged = _map(tokenized, function (token) {
-            var parts = new RegExp('(.+)/([A-Z]+)', 'g').execFile(token)
+        let tagged = map(tokenized, function (token) {
+            var parts = new RegExp('(.+)/([A-Z]+)', 'g').exec(token)
             if (parts) {
                 return {
                     w: parts[1],
@@ -97,10 +101,11 @@ class EntityRecognizer {
         tagged = _compact(tagged)
 
         // Now we extract the neighbors into one entity
-        var entities = {}
+
+        var entities = {} as EntityGroup
         var i
         var l = tagged.length
-        var prevEntity = false
+        let prevEntity: string = null
         var entityBuffer = []
         for (i = 0; i < l; i++) {
             if (tagged[i].t != 'O') {
@@ -139,4 +144,5 @@ class EntityRecognizer {
         return entities
     }
 }
+
 export { EntityRecognizer }

@@ -63,3 +63,9 @@ typings/
 # lock files
 package-lock.json
 yarn.lock
+
+#temporary folders
+tmp
+
+# test output
+out
